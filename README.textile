@@ -4,6 +4,7 @@ h2. Long distance, indoor cycling software
 Well, there is opensprints for short, 400 meter races. But if you want to run an event more similar to typical cycling events (i.e. _endurance_) you could just set the race distance to 60km, or you could use this!
 
 h2. Features
+
 * Time based: 30 minutes (configurable).
 * 8 racers: wire together two opensprints mainboards to acheive 8 racers.
 * Forkmountless: This is intended for use without a forkmount.
