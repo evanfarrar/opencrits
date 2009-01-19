@@ -1,0 +1,21 @@
+# location of the arduino
+device: /dev/ttyUSB0
+
+# how long the race should be, in minutes
+race_length: 200
+
+# the size of each roller, in meters
+roller_circumference: 1.0
+
+#the title displayed
+title: OpenSprints
+
+#the measurement system displayed: standard or metric
+units: standard
+#units: metric
+
+
+# The list of racers' names. Supports from 1-8 racers.
+bikes:
+- "red"
+- "blue"
