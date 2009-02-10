@@ -17,11 +17,6 @@ int values[8] = {0,0,0,0,0,0,0,0};
 unsigned long racerTicks[8] = {0,0,0,0,0,0,0,0};
 unsigned long racerFinishTimeMillis[8];
 
-unsigned long lastCountDownMillis;
-int lastCountDown;
-
-int previousFakeTickMillis = 0;
-
 int updateInterval = 250;
 unsigned long lastUpdateMillis = 0;
 
@@ -67,13 +62,7 @@ void checkSerial(){
         racerTicks[i] = 0;
         racerFinishTimeMillis[i] = 0;          
       }
-      raceStarting = true;
-      lastCountDown = 4;
-      lastCountDownMillis = millis();
-    }
-    if(val == 'm') {
-      raceStart();
-      mockMode = true;
+      raceStarted = true;
     }
     if(val == 's') {
       raceStarted = false;
@@ -101,18 +90,6 @@ void loop() {
   
   checkSerial();
 
-
-  if (raceStarting) {
-    if((millis() - lastCountDownMillis) > 1000){
-      lastCountDown -= 1;
-      lastCountDownMillis = millis();
-    }
-    if(lastCountDown == 0) {
-      raceStart();
-      raceStarting = false;
-      raceStarted = true;
-    }
-  }
   if (raceStarted) {
     currentTimeMillis = millis() - raceStartMillis;
 
@@ -125,8 +102,6 @@ void loop() {
       previoussensorValues[i] = values[i];
     }
   }
-  
 
   printStatusUpdate();
 }
-
