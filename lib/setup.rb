@@ -1,5 +1,7 @@
 require 'yaml'
 
+require 'lib/racer.rb'
+
 if File.exists?('conf.yml')
   CONFIG = YAML::load(File.read('conf.yml'))
 else

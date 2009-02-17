@@ -1,4 +1,6 @@
-Shoes.app :title => 'title', :width => 800, :height => 600 do
+require 'lib/setup.rb'
+Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
+  @racers = CONFIG['bikes'].map{|r| Racer.new(r, eval(r))}
   def racer(x, y, color)
     image 180, 90, :top => x, :left => y do
       strokewidth 3
@@ -26,7 +28,7 @@ Shoes.app :title => 'title', :width => 800, :height => 600 do
               :left => 80,
               :radius => 20,
               :center => true)
-             
+
     end
 
   end
@@ -48,53 +50,30 @@ Shoes.app :title => 'title', :width => 800, :height => 600 do
   #seventh
     racer 90,580, maroon
   stack {
-    subtitle "opencrits", :stroke => white
+    subtitle CONFIG["title"], :stroke => white
     flow(:top => 300) {
       stack(:width => 400) {
-        flow(:width => 400, :padding => 20) {
-          border red, :strokewidth => 8
-          fill white
-          subtitle " ", "racer 1:", :stroke => white
+
+        @racers[0..3].each { |racer|
+          flow(:width => 400, :padding => 20) {
+            border racer.color, :strokewidth => 8
+            fill white
+            subtitle " ", racer.name, :stroke => white
+          }
         }
-        flow(:width => 400, :padding => 20) {
-          border blue, :strokewidth => 8
-          fill white
-          subtitle " ", "racer 2:", :stroke => white
-        }
-        flow(:width => 400, :padding => 20) {
-          border yellow, :strokewidth => 8
-          fill white
-          subtitle " ", "racer 3:", :stroke => white
-        }
-        flow(:width => 400, :padding => 20) {
-          border green, :strokewidth => 8
-          fill white
-          subtitle " ", "racer 4:", :stroke => white
-        }
-    }
-    stack(:width => 400) {
-        flow(:width => 400, :padding => 20) {
-          border gray, :strokewidth => 8
-          fill white
-          subtitle " ", "racer 5:", :stroke => white
-        }
-        flow(:width => 400, :padding => 20) {
-          border cyan, :strokewidth => 8
-          fill white
-          subtitle " ", "racer 6:", :stroke => white
-        }
-        flow(:width => 400, :padding => 20) {
-          border black, :strokewidth => 8
-          fill white
-          subtitle " ", "racer 7:", :stroke => white
-        }
-        flow(:width => 400, :padding => 20) {
-          border maroon, :strokewidth => 8
-          fill white
-          subtitle " ", "racer 8:", :stroke => white
+      }
+      stack(:width => 400) {
+        @racers[4..7].each { |racer|
+          flow(:width => 400, :padding => 20) {
+            border racer.color, :strokewidth => 8
+            fill white
+            subtitle " ", racer.name, :stroke => white
+          }
         }
       }
     }
   }
-
+  button "start"
+  button "stop"
+  button "quit"
 end
