@@ -21,7 +21,7 @@ int updateInterval = 250;
 unsigned long lastUpdateMillis = 0;
 
 void setup() {
-  Serial.begin(115200); 
+  Serial.begin(115200);
   pinMode(statusLEDPin, OUTPUT);
   for(int i=0; i<=7; i++)
   {
@@ -41,7 +41,7 @@ void blinkLED() {
       lastStatusLEDValue = HIGH;
     else
       lastStatusLEDValue = LOW;
-  
+
 
     digitalWrite(statusLEDPin, lastStatusLEDValue);
   }
@@ -60,7 +60,7 @@ void checkSerial(){
       for(int i=0; i<=7; i++)
       {
         racerTicks[i] = 0;
-        racerFinishTimeMillis[i] = 0;          
+        racerFinishTimeMillis[i] = 0;
       }
       raceStarted = true;
     }
@@ -87,7 +87,7 @@ void printStatusUpdate() {
 
 void loop() {
   blinkLED();
-  
+
   checkSerial();
 
   if (raceStarted) {
