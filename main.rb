@@ -1,4 +1,4 @@
-load "lib/setup.rb"
+require "lib/setup.rb"
 
 
 Shoes.app(:height => 120, :width => 200,
