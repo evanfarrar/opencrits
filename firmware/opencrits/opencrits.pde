@@ -48,9 +48,6 @@ void blinkLED() {
 
 }
 
-void raceStart() {
-  raceStartMillis = millis();
-}
 
 
 void checkSerial(){
@@ -61,6 +58,7 @@ void checkSerial(){
       {
         racerTicks[i] = 0;
         racerFinishTimeMillis[i] = 0;
+        raceStartMillis = millis();
       }
       raceStarted = true;
     }

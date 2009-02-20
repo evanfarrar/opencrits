@@ -1,6 +1,9 @@
 require 'lib/setup.rb'
 Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
   @racers = CONFIG['bikes'].map{|r| Racer.new(r, eval(r))}
+  def format_seconds(seconds)
+    ("%02d" % (seconds / 60))+":"+("%02d" % (seconds % 60))
+  end
   def racer(x, y, racer)
     image 180, 90, :top => x, :left => y do
       strokewidth 3
@@ -48,11 +51,11 @@ Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
   background black
   @refresh_area = stack {
     background black
+    subtitle CONFIG["title"], :stroke => white
     @racers.each_with_index {|r,i|
       racer RACER_POSITIONS[i][0], RACER_POSITIONS[i][1], r
     }
 
-    subtitle CONFIG["title"], :stroke => white
     flow(:top => 300) {
       stack(:width => 400) {
 
@@ -78,13 +81,17 @@ Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
     }
   }
   button "start" do
-    @animation = @refresh_area.animate(3) do
+    s = Sensor.new(CONFIG['device'])
+    s.start
+    @animation = @refresh_area.animate(8) do
         clear
         background black
-        @racers.sort_by{rand(2)-1}.each_with_index {|r,i|
+        @racers.each_with_index{ |r,i| r.ticks = s.racers[i][1] }
+        @racers.sort_by{|r|r.distance}.reverse.each_with_index {|r,i|
           racer RACER_POSITIONS[i][0], RACER_POSITIONS[i][1], r
         }
-        subtitle CONFIG["title"], :stroke => white
+        leader = @racers.max{|r1,r2| r1.distance <=> r1.distance}
+
         flow(:top => 300) {
           stack(:width => 400) {
 
@@ -92,7 +99,7 @@ Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
               flow(:width => 400, :padding => 20) {
                 border racer.color, :strokewidth => 8
                 fill white
-                subtitle " ", racer.name, :stroke => white
+                subtitle " ", racer.stats(leader), :stroke => white
               }
             }
           }
@@ -102,16 +109,21 @@ Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
                 flow(:width => 400, :padding => 20) {
                   border racer.color, :strokewidth => 8
                   fill white
-                  subtitle " ", racer.name, :stroke => white
+                  subtitle " ", racer.stats(leader), :stroke => white
                 }
               }
             }
           end
+          subtitle CONFIG["title"], :top => 0, :left => 0,:stroke => white
+          secs = (s.time / 1000).round
+          secs_left = CONFIG['race_length']*60 - secs
+          caption "elapsed: #{format_seconds(secs)}", :top => 260,
+            :stroke => white, :left => 20
+          caption "remaining: #{format_seconds(secs_left)}",
+            :top => 260, :left => 200, :stroke => white
         }
+        
     end
-  end
-  button "stop" do
-    @animation.stop
   end
   button "quit" do
     exit
