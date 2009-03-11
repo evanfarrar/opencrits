@@ -31,6 +31,7 @@ void setup() {
   {
     digitalWrite(sensorPins[i], HIGH);
   }
+  randomSeed(analogRead(0));
 }
 
 void blinkLED() {
@@ -61,6 +62,10 @@ void checkSerial(){
         raceStartMillis = millis();
       }
       raceStarted = true;
+    }
+    if(val == 'm') {
+      raceStarted = true;
+      mockMode = true;
     }
     if(val == 's') {
       raceStarted = false;
@@ -93,11 +98,20 @@ void loop() {
 
     for(int i=0; i<=7; i++)
     {
-      values[i] = digitalRead(sensorPins[i]);
-      if(values[i] == HIGH && previoussensorValues[i] == LOW){
-        racerTicks[i]++;
+      if(!mockMode)
+      {
+        values[i] = digitalRead(sensorPins[i]);
+        if(values[i] == HIGH && previoussensorValues[i] == LOW){
+          racerTicks[i]++;
+        }
+        previoussensorValues[i] = values[i];
       }
-      previoussensorValues[i] = values[i];
+      else
+      {
+        if(currentTimeMillis - lastUpdateMillis > updateInterval) {
+          racerTicks[i]+=(i+1);
+        }
+      }
     }
   }
 
