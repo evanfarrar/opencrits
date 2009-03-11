@@ -1,5 +1,5 @@
 class Racer
-  attr_accessor :name, :color, :way_points
+  attr_accessor :name, :color, :way_points, :stat_para, :image, :name_para
 
   def initialize(name, color)
     @name, @color = name, color

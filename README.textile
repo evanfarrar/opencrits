@@ -1,4 +1,5 @@
 h1. OpenCrits
+
 h2. Long distance, indoor cycling software
 
 Well, there is opensprints for short, 400 meter races. But if you want to run an event more similar to typical cycling events (i.e. _endurance_) you could just set the race distance to 60km, or you could use this!
