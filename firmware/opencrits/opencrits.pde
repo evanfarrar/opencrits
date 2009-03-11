@@ -17,7 +17,7 @@ int values[8] = {0,0,0,0,0,0,0,0};
 unsigned long racerTicks[8] = {0,0,0,0,0,0,0,0};
 unsigned long racerFinishTimeMillis[8];
 
-int updateInterval = 250;
+int updateInterval = 500;
 unsigned long lastUpdateMillis = 0;
 
 void setup() {

@@ -16,7 +16,7 @@ class Racer
   end
 
   def distance
-    (@ticks * CONFIG['roller_circumference'])
+    (@ticks||0 * CONFIG['roller_circumference'])
   end
 
   def ticks=(ticks)

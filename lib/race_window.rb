@@ -83,7 +83,7 @@ Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
   button "start" do
     s = Sensor.new(CONFIG['device'])
     s.start
-    @animation = @refresh_area.animate(8) do
+    @animation = @refresh_area.animate(2) do
         clear
         background black
         @racers.each_with_index{ |r,i| r.ticks = s.racers[i][1] }
