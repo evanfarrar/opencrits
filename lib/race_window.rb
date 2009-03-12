@@ -33,7 +33,6 @@ Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
               :center => true)
 
     end
-    para racer.name, :top => x, :left => y,:stroke => white
 
   end
 
@@ -53,7 +52,8 @@ Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
     background black
     subtitle CONFIG["title"], :stroke => white
     @racers.each_with_index {|r,i|
-      racer RACER_POSITIONS[i][0], RACER_POSITIONS[i][1], r
+      r.image = racer RACER_POSITIONS[i][0], RACER_POSITIONS[i][1], r
+      r.name_para = para r.name, :top => RACER_POSITIONS[i][0], :left => RACER_POSITIONS[i][1],:stroke => white
     }
 
     flow(:top => 300) {
@@ -63,7 +63,7 @@ Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
           flow(:width => 400, :padding => 20) {
             border racer.color, :strokewidth => 8
             fill white
-            subtitle " ", racer.name, :stroke => white
+            racer.stat_para = subtitle " ", racer.name, :stroke => white
           }
         }
       }
@@ -73,56 +73,36 @@ Shoes.app :title => CONFIG['title'], :width => 800, :height => 600 do
             flow(:width => 400, :padding => 20) {
               border racer.color, :strokewidth => 8
               fill white
-              subtitle " ", racer.name, :stroke => white
+              racer.stat_para = subtitle " ", racer.name, :stroke => white
             }
           }
         }
       end
     }
+    @elapsed = caption "elapsed: 0:00", :top => 260,
+      :stroke => white, :left => 20, :width => 200
+    @remaining = caption "remaining: #{format_seconds(CONFIG['race_length']*60)}",
+      :top => 260, :left => 200, :stroke => white
   }
   button "start" do
     s = Sensor.new(CONFIG['device'])
     s.start
-    @animation = @refresh_area.animate(8) do
-        clear
-        background black
-        @racers.each_with_index{ |r,i| r.ticks = s.racers[i][1] }
-        @racers.sort_by{|r|r.distance}.reverse.each_with_index {|r,i|
-          racer RACER_POSITIONS[i][0], RACER_POSITIONS[i][1], r
-        }
-        leader = @racers.max{|r1,r2| r1.distance <=> r1.distance}
 
-        flow(:top => 300) {
-          stack(:width => 400) {
+    every(0.25) do
+      secs = (s.time / 1000).round
+      secs_left = CONFIG['race_length']*60 - secs
+      @elapsed.text = "elapsed: #{format_seconds(secs)}"
+      @remaining.text = "remaining: #{format_seconds(secs_left)}"
+    end
 
-            @racers[0..3].each { |racer|
-              flow(:width => 400, :padding => 20) {
-                border racer.color, :strokewidth => 8
-                fill white
-                subtitle " ", racer.stats(leader), :stroke => white
-              }
-            }
-          }
-          if @racers.length > 4
-            stack(:width => 400) {
-              @racers[4..7].each { |racer|
-                flow(:width => 400, :padding => 20) {
-                  border racer.color, :strokewidth => 8
-                  fill white
-                  subtitle " ", racer.stats(leader), :stroke => white
-                }
-              }
-            }
-          end
-          subtitle CONFIG["title"], :top => 0, :left => 0,:stroke => white
-          secs = (s.time / 1000).round
-          secs_left = CONFIG['race_length']*60 - secs
-          caption "elapsed: #{format_seconds(secs)}", :top => 260,
-            :stroke => white, :left => 20
-          caption "remaining: #{format_seconds(secs_left)}",
-            :top => 260, :left => 200, :stroke => white
-        }
-        
+    every(1) do
+      @racers.each_with_index{ |r,i| r.ticks = s.racers[i][1] }
+      @racers.sort_by{|r|r.distance}.reverse.each_with_index {|r,i|
+        r.image.tween(:top => RACER_POSITIONS[i][0], :left => RACER_POSITIONS[i][1])
+        r.name_para.tween(:top => RACER_POSITIONS[i][0], :left => RACER_POSITIONS[i][1])
+      }
+      leader = @racers.max{|r1,r2| r1.distance <=> r1.distance}
+      @racers.each {|r| r.stat_para.text = " "+r.stats(leader) }
     end
   end
   button "quit" do

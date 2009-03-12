@@ -1,4 +1,5 @@
 h1. OpenCrits
+
 h2. Long distance, indoor cycling software
 
 Well, there is opensprints for short, 400 meter races. But if you want to run an event more similar to typical cycling events (i.e. _endurance_) you could just set the race distance to 60km, or you could use this!
@@ -9,3 +10,7 @@ h2. Features
 * 8 racers: wire together two opensprints mainboards to acheive 8 racers.
 * Forkmountless: This is intended for use without a forkmount.
 * Safety measures: fall off 3 times and you're eliminated.
+
+h2. Screenshots
+
+!http://farm4.static.flickr.com/3394/3287382326_8f7e904502.jpg?v=0!
